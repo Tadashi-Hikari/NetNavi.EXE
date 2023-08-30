@@ -20,4 +20,5 @@ profiles.clj
 .lsp
 .clj-kondo
 .vscode
-
+portal/*
+docs/*

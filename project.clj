@@ -42,7 +42,8 @@
                  [ring/ring-core "1.9.6"]
                  [ring/ring-defaults "0.3.4"]
                  [selmer "1.12.55"]
-                 [thheller/shadow-cljs "2.20.3" :scope "provided"]]
+                 [thheller/shadow-cljs "2.20.3" :scope "provided"]
+                 [net.clojars.wkok/openai-clojure "0.9.0"]] 
 
   :min-lein-version "2.0.0"
   

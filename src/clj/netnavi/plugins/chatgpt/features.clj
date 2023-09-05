@@ -44,6 +44,13 @@
 (defn exit []
   (System/exit 0))
 
+(defn echo
+  "Used to print the last output to a file"
+  []
+  (println "Enter filename to spit: ")
+  (let [filename (read-line)]
+    (spit filename (last @(:running-log gpt/assistant)))))
+
 ; I might want this to return 
 (defn check-for-command? 
   "Checks if a command exists. If so, it runs the command" 

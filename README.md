@@ -16,6 +16,10 @@ To start a web server for the application, run:
 
     lein run 
 
+To start a CLI of netnavi, run:
+
+    lein run -- -nw
+
 ## License
 
 Copyright © 2023 FIXME

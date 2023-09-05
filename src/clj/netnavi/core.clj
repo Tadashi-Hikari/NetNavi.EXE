@@ -1,13 +1,14 @@
 (ns netnavi.core
   (:require
-    [netnavi.handler :as handler]
-    [netnavi.nrepl :as nrepl]
-    [luminus.http-server :as http]
-    [luminus-migrations.core :as migrations]
-    [netnavi.config :refer [env]]
-    [clojure.tools.cli :refer [parse-opts]]
-    [clojure.tools.logging :as log]
-    [mount.core :as mount])
+   [netnavi.handler :as handler]
+   [netnavi.nrepl :as nrepl]
+   [luminus.http-server :as http]
+   [luminus-migrations.core :as migrations]
+   [netnavi.config :refer [env]]
+   [clojure.tools.cli :refer [parse-opts]]
+   [clojure.tools.logging :as log]
+   [mount.core :as mount]
+   [netnavi.exe :as exe])
   (:gen-class))
 
 ;; log uncaught exceptions in threads
@@ -20,7 +21,8 @@
 
 (def cli-options
   [["-p" "--port PORT" "Port number"
-    :parse-fn #(Integer/parseInt %)]])
+    :parse-fn #(Integer/parseInt %)]
+   ["-nw" "--no-window" "Run without starting the HTTP server"]])
 
 (mount/defstate ^{:on-reload :noop} http-server
   :start
@@ -56,22 +58,29 @@
   (.addShutdownHook (Runtime/getRuntime) (Thread. stop-app)))
 
 (defn -main [& args]
-  (-> args
-      (parse-opts cli-options)
-      (mount/start-with-args #'netnavi.config/env))
-  (cond
-    (nil? (:database-url env))
-    (do
-      (log/error "Database configuration not found, :database-url environment variable must be set before running")
-      (System/exit 1))
-    (some #{"init"} args)
-    (do
-      (migrations/init (select-keys env [:database-url :init-script]))
-      (System/exit 0))
-    (migrations/migration? args)
-    (do
-      (migrations/migrate args (select-keys env [:database-url]))
-      (System/exit 0))
-    :else
-    (start-app args)))
+  ; I had to add the let, to retain opts. then I added in the :no-window opts
+  (let [opts (parse-opts args cli-options)]
+    (-> args
+        (parse-opts cli-options)
+        (mount/start-with-args #'netnavi.config/env))
+     (cond
+       (:no-window opts)
+       (do
+         (exe/perpetual-loop)
+         (System/exit 0))
+       (nil? (:database-url env))
+       (do
+         (log/error "Database configuration not found, :database-url environment variable must be set before running")
+         (System/exit 1))
+       (some #{"init"} args)
+       (do
+         (migrations/init (select-keys env [:database-url :init-script]))
+         (System/exit 0))
+       (migrations/migration? args)
+       (do
+         (migrations/migrate args (select-keys env [:database-url]))
+         (System/exit 0))
+       :else
+       (start-app args)))) 
+ 
   

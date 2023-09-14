@@ -1,7 +1,8 @@
 (ns netnavi.plugins.chatgpt.features
   (:require [netnavi.util :as util] 
             [netnavi.plugins.chatgpt.gpt :as gpt]
-            [clojure.java.shell :as shell])
+            [clojure.java.shell :as shell]
+            [netnavi.plugins.chatgpt.installer :as installer])
   (:import [netnavi.assist Assistant]))
 
 ;(let [result (clojure.java.shell/sh "firefox")])
@@ -64,6 +65,12 @@
        (resolved)
        true)
       nil)))
+ 
+; Find a better way to do this
+(defn set-env-var 
+  "A simple wrapper for the installer expression, to set the API Key and Org info"
+  [] 
+  (installer/request-api-info))
 
 ;(check-for-command? "init!")
 

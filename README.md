@@ -6,7 +6,7 @@ FIXME
 
 ## Prerequisites
 
-You will need [Leiningen][1] 2.0 or above installed.
+You will need [Leiningen][1] 2.0 or above installed. To work on the ClojureScript side of things, use [Shadow-Cljs][2]
 
 [1]: https://github.com/technomancy/leiningen
 

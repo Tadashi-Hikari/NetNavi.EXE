@@ -1,7 +1,9 @@
 (ns netnavi.exe
   (:require [netnavi.util :as util]
             [netnavi.assist :as assistant]
-            [netnavi.plugins.chatgpt.features :as features]))
+            [netnavi.plugins.chatgpt.features :as features]
+            ; This should be changed to GPT installer
+            [netnavi.plugins.chatgpt.installer :as installer]))
 (require
  '[netnavi.plugins.chatgpt.gpt :as gpt])
 
@@ -26,6 +28,7 @@
 ; ----- START PROGRAM HERE -----
 (print util/BLUE (format "\n%s initalized\n%s" assistant-name util/RESET))
 (println util/line)
+(installer/do-startup-check)
 (perpetual-loop)
 
 ;(print @(:running-log netnavi.plugins.gpt/assistant)) 

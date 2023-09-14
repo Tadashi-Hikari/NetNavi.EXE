@@ -6,23 +6,24 @@
 
 ;(let [result (clojure.java.shell/sh "firefox")])
 
-(defn clear-terminal
+(defn clear
   "A simple expression to clear a bash shell"
   []
+  ; Uses ANSI code for 'move input to start' and "clear terminal". Does not work in all terminals
   (print "\u001b[H\u001b[2J"))
 
 (defn init!
   "reset the assistant back to default by mutating the record"
   []
   (swap! (:running-log gpt/assistant) (constantly gpt/empty-chat))
-  (clear-terminal)
+  (clear)
   (println (format "%sReinitialized%s" util/RED util/RESET)))
 
 (defn init
   "rest the assistant back to default by assigning a new value"
   []
   (def assistant (Assistant. (atom gpt/empty-chat)))
-  (clear-terminal)
+  (clear)
   (println (format "%sReinitialized%s" util/RED util/RESET)))
 
 (defn strike-last-input!
